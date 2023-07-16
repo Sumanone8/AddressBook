@@ -9,19 +9,19 @@ namespace AddressBook
         public string Address { get; set; }
         public string City { get; set; }
         public string State { get; set; }
-        public string Zip { get; set; }
-        public string Phone { get; set; }
+        public string ZipCode { get; set; }
+        public string PhoneNumber { get; set; }
         public string Email { get; set; }
 
-        public Contact(string firstName, string lastName, string address, string city, string state, string zip, string phone, string email)
+        public Contact(string firstName, string lastName, string address, string city, string state, string zipCode, string phoneNumber, string email)
         {
             FirstName = firstName;
             LastName = lastName;
             Address = address;
             City = city;
             State = state;
-            Zip = zip;
-            Phone = phone;
+            ZipCode = zipCode;
+            PhoneNumber = phoneNumber;
             Email = email;
         }
     }
