@@ -8,42 +8,77 @@ namespace AddressBook
         {
             Console.WriteLine("Hello Fellow Learners!\n--Welcome to Address Book Problem--");
 
-            AddressBookManager addressBookManager = new AddressBookManager();
+            AddressBookSystem addressBookSystem = new AddressBookSystem();
 
-            // Creating multiple contacts and adding them to the Address Book
-            Contact newContact1 = new Contact("John", "Doe", "123 Main St", "Cityville", "Stateville", "12345", "123-456-7890", "john.doe@example.com");
-            addressBookManager.AddContact(newContact1);
+            // Add a new Address Book using Console input
+            Console.Write("Enter the name of the new Address Book: ");
+            string newAddressBookName = Console.ReadLine()!;
 
-            Contact newContact2 = new Contact("Jane", "Smith", "456 Elm St", "Townville", "Stateville", "67890", "987-654-3210", "jane.smith@example.com");
-            addressBookManager.AddContact(newContact2);
+            if (!string.IsNullOrEmpty(newAddressBookName))
+            {
+                if (!addressBookSystem.AddressBookExists(newAddressBookName))
+                {
+                    addressBookSystem.AddAddressBook(newAddressBookName);
+                }
+                else
+                {
+                    Console.WriteLine($"An Address Book with the name '{newAddressBookName}' already exists.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Address Book name. Please provide a non-empty name.");
+            }
 
-            Contact newContact3 = new Contact("Michael", "Johnson", "789 Oak Ave", "Villageville", "Stateville", "45678", "567-890-1234", "michael.johnson@example.com");
-            addressBookManager.AddContact(newContact3);
+            // Creating contacts and adding them to the Address Book
+            AddressBook? addressBook = addressBookSystem.GetAddressBook(newAddressBookName);
+            if (addressBook != null)
+            {
+                Contact newContact1 = new Contact(
+                    firstName: "John",
+                    lastName: "Doe",
+                    address: "123 Main St",
+                    city: "Cityville",
+                    state: "Stateville",
+                    zipCode: "12345",
+                    phoneNumber: "123-456-7890",
+                    email: "john.doe@example.com"
+                );
+                addressBook!.AddContact(newContact1);
+
+                Contact newContact2 = new Contact(
+                    firstName: "Jane",
+                    lastName: "Smith",
+                    address: "456 Elm St",
+                    city: "Townville",
+                    state: "Stateville",
+                    zipCode: "67890",
+                    phoneNumber: "987-654-3210",
+                    email: "jane.smith@example.com"
+                );
+                addressBook!.AddContact(newContact2);
+            }
+            else
+            {
+                Console.WriteLine($"Address Book '{newAddressBookName}' not found.");
+            }
 
             // Displaying all contacts in the address book
-            DisplayAddressBook(addressBookManager);
-
-            // Delete a person using their name
-            Console.Write("Enter the first name of the person you want to delete: ");
-            string firstNameToDelete = Console.ReadLine() ?? ""; // Use "" as the default value if the input is null
-
-            Console.Write("Enter the last name of the person you want to delete: ");
-            string lastNameToDelete = Console.ReadLine() ?? ""; // Use "" as the default value if the input is null
-
-            addressBookManager.DeleteContactByName(firstNameToDelete, lastNameToDelete);
-
-            // Display the updated address book
-            DisplayAddressBook(addressBookManager);
+            DisplayAddressBook(addressBook);
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
 
-        static void DisplayAddressBook(AddressBookManager addressBookManager)
+        static void DisplayAddressBook(AddressBook? addressBook)
         {
-            var addressBook = addressBookManager.GetAddressBook();
+            if (addressBook == null)
+            {
+                Console.WriteLine("Address Book not found.");
+                return;
+            }
 
-            Console.WriteLine("\nAddress Book Entries:");
-            foreach (Contact contact in addressBook)
+            Console.WriteLine($"\nAddress Book '{addressBook.Name}' Entries:");
+            foreach (Contact contact in addressBook.GetContacts())
             {
                 Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
                 Console.WriteLine($"Address: {contact.Address}");
