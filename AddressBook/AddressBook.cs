@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace AddressBook
 {
@@ -7,6 +8,7 @@ namespace AddressBook
     {
         public string Name { get; private set; }
         private List<Contact> contacts;
+
         public Dictionary<string, List<Contact>> CityPersonDictionary { get; private set; }
         public Dictionary<string, List<Contact>> StatePersonDictionary { get; private set; }
 
@@ -18,14 +20,8 @@ namespace AddressBook
             StatePersonDictionary = new Dictionary<string, List<Contact>>();
         }
 
-        public bool AddContact(Contact contact)
+        public void AddContact(Contact contact)
         {
-            if (contacts.Contains(contact))
-            {
-                Console.WriteLine("Duplicate entry: Contact already exists.");
-                return false;
-            }
-
             contacts.Add(contact);
 
             if (!CityPersonDictionary.ContainsKey(contact.City))
@@ -39,33 +35,7 @@ namespace AddressBook
                 StatePersonDictionary[contact.State] = new List<Contact>();
             }
             StatePersonDictionary[contact.State].Add(contact);
-
-            return true;
         }
-
-        public List<Contact> GetContacts()
-        {
-            return contacts;
-        }
-
-        public List<Contact> SearchByCity(string city)
-        {
-            if (CityPersonDictionary.TryGetValue(city, out List<Contact>? cityContacts))
-            {
-                return cityContacts;
-            }
-            return new List<Contact>();
-        }
-
-        public List<Contact> SearchByState(string state)
-        {
-            if (StatePersonDictionary.TryGetValue(state, out List<Contact>? stateContacts))
-            {
-                return stateContacts;
-            }
-            return new List<Contact>();
-        }
-
 
         public void SortContactsByName()
         {
@@ -93,6 +63,44 @@ namespace AddressBook
         public void SortContactsByZip()
         {
             contacts.Sort((contact1, contact2) => contact1.ZipCode.CompareTo(contact2.ZipCode));
+        }
+
+        public void SaveToFile(string filePath)
+        {
+            using (StreamWriter writer = new StreamWriter(filePath))
+            {
+                foreach (Contact contact in contacts)
+                {
+                    writer.WriteLine(contact.ToString());
+                }
+            }
+        }
+
+        public void LoadFromFile(string filePath)
+        {
+            if (File.Exists(filePath))
+            {
+                using (StreamReader reader = new StreamReader(filePath))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        string[] parts = line.Split('|');
+                        if (parts.Length == 8)
+                        {
+                            Contact contact = new Contact(
+                                parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7]
+                            );
+                            contacts.Add(contact);
+                        }
+                    }
+                }
+            }
+        }
+
+        public List<Contact> GetContacts()
+        {
+            return contacts;
         }
     }
 }

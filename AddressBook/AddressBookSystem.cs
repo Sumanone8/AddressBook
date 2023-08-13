@@ -40,31 +40,5 @@ namespace AddressBook
         {
             return new List<string>(addressBooks.Keys);
         }
-
-        public List<Contact> SearchContactsByCity(string city)
-        {
-            List<Contact> searchResults = new List<Contact>();
-
-            foreach (AddressBook addressBook in addressBooks.Values)
-            {
-                List<Contact> cityContacts = addressBook.SearchByCity(city);
-                searchResults.AddRange(cityContacts);
-            }
-
-            return searchResults;
-        }
-
-        public List<Contact> SearchContactsByState(string state)
-        {
-            List<Contact> searchResults = new List<Contact>();
-
-            foreach (AddressBook addressBook in addressBooks.Values)
-            {
-                List<Contact> stateContacts = addressBook.SearchByState(state);
-                searchResults.AddRange(stateContacts);
-            }
-
-            return searchResults;
-        }
     }
 }

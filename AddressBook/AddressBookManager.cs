@@ -23,14 +23,14 @@ namespace AddressBook
             return addressBook;
         }
 
-        public Contact? GetContactByName(string firstName, string lastName)
+        public Contact GetContactByName(string firstName, string lastName)
         {
             return addressBook.FirstOrDefault(c => c.FirstName == firstName && c.LastName == lastName);
         }
 
         public void DeleteContactByName(string firstName, string lastName)
         {
-            Contact? contactToDelete = GetContactByName(firstName, lastName);
+            Contact contactToDelete = GetContactByName(firstName, lastName);
             if (contactToDelete != null)
             {
                 addressBook.Remove(contactToDelete);

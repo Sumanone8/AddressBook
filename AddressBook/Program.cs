@@ -12,7 +12,7 @@ namespace AddressBook
 
             // Add a new Address Book using Console input
             Console.Write("Enter the name of the new Address Book: ");
-            string newAddressBookName = Console.ReadLine()!;
+            string newAddressBookName = Console.ReadLine();
 
             if (!string.IsNullOrEmpty(newAddressBookName))
             {
@@ -30,32 +30,14 @@ namespace AddressBook
                 Console.WriteLine("Invalid Address Book name. Please provide a non-empty name.");
             }
 
-            // Creating contacts and adding them to the Address Book
             AddressBook? addressBook = addressBookSystem.GetAddressBook(newAddressBookName);
+
             if (addressBook != null)
             {
-                Contact newContact1 = new Contact(
-                    firstName: "John",
-                    lastName: "Doe",
-                    address: "123 Main St",
-                    city: "Cityville",
-                    state: "Stateville",
-                    zipCode: "12345",
-                    phoneNumber: "123-456-7890",
-                    email: "john.doe@example.com"
-                );
+                Contact newContact1 = new Contact("John", "Doe", "123 Main St", "Cityville", "Stateville", "12345", "123-456-7890", "john.doe@example.com");
                 addressBook.AddContact(newContact1);
 
-                Contact newContact2 = new Contact(
-                    firstName: "Jane",
-                    lastName: "Smith",
-                    address: "456 Elm St",
-                    city: "Townville",
-                    state: "Stateville",
-                    zipCode: "67890",
-                    phoneNumber: "987-654-3210",
-                    email: "jane.smith@example.com"
-                );
+                Contact newContact2 = new Contact("Jane", "Smith", "456 Elm St", "Townville", "Stateville", "67890", "987-654-3210", "jane.smith@example.com");
                 addressBook.AddContact(newContact2);
             }
             else
@@ -66,18 +48,14 @@ namespace AddressBook
             // Displaying all contacts in the address book
             DisplayAddressBook(addressBook);
 
-            // Sorting and displaying contacts by City, State, and Zip
-            if (addressBook != null)
-            {
-                addressBook.SortContactsByCity();
-                DisplaySortedAddressBook(addressBook, "City");
+            // Saving address book to a file
+            string filePath = "addressbook.txt";
+            addressBook.SaveToFile(filePath);
+            Console.WriteLine("Address Book saved to file.");
 
-                addressBook.SortContactsByState();
-                DisplaySortedAddressBook(addressBook, "State");
-
-                addressBook.SortContactsByZip();
-                DisplaySortedAddressBook(addressBook, "Zip");
-            }
+            // Loading address book from a file
+            addressBook.LoadFromFile(filePath);
+            Console.WriteLine("Address Book loaded from file.");
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
@@ -93,38 +71,9 @@ namespace AddressBook
             Console.WriteLine($"\nAddress Book '{addressBook.Name}' Entries:");
             foreach (Contact contact in addressBook.GetContacts())
             {
-                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                Console.WriteLine($"Address: {contact.Address}");
-                Console.WriteLine($"City: {contact.City}");
-                Console.WriteLine($"State: {contact.State}");
-                Console.WriteLine($"Zip Code: {contact.ZipCode}");
-                Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                Console.WriteLine($"Email: {contact.Email}");
-                Console.WriteLine();
-            }
-        }
-
-        static void DisplaySortedAddressBook(AddressBook? addressBook, string sortBy)
-        {
-            if (addressBook == null)
-            {
-                Console.WriteLine("Address Book not found.");
-                return;
-            }
-
-            Console.WriteLine($"\nSorting Address Book by {sortBy}:");
-            foreach (Contact contact in addressBook.GetContacts())
-            {
-                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                Console.WriteLine($"Address: {contact.Address}");
-                Console.WriteLine($"City: {contact.City}");
-                Console.WriteLine($"State: {contact.State}");
-                Console.WriteLine($"Zip Code: {contact.ZipCode}");
-                Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                Console.WriteLine($"Email: {contact.Email}");
+                Console.WriteLine(contact.ToString());
                 Console.WriteLine();
             }
         }
     }
 }
-
