@@ -47,7 +47,7 @@ namespace AddressBook
 
             foreach (AddressBook addressBook in addressBooks.Values)
             {
-                List<Contact> cityContacts = addressBook.GetContactsByCity(city);
+                List<Contact> cityContacts = addressBook.SearchByCity(city);
                 searchResults.AddRange(cityContacts);
             }
 
@@ -60,7 +60,7 @@ namespace AddressBook
 
             foreach (AddressBook addressBook in addressBooks.Values)
             {
-                List<Contact> stateContacts = addressBook.GetContactsByState(state);
+                List<Contact> stateContacts = addressBook.SearchByState(state);
                 searchResults.AddRange(stateContacts);
             }
 

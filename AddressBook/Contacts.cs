@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AddressBook
+﻿namespace AddressBook
 {
     class Contact
     {
@@ -24,6 +22,12 @@ namespace AddressBook
             PhoneNumber = phoneNumber;
             Email = email;
         }
+
+        public override string ToString()
+        {
+            return $"Name: {FirstName} {LastName}\nAddress: {Address}\nCity: {City}\nState: {State}\nZip Code: {ZipCode}\nPhone: {PhoneNumber}\nEmail: {Email}";
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
