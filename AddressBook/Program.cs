@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AddressBook
 {
@@ -44,6 +45,7 @@ namespace AddressBook
                     phoneNumber: "123-456-7890",
                     email: "john.doe@example.com"
                 );
+                addressBook!.AddContact(newContact1);
 
                 Contact newContact2 = new Contact(
                     firstName: "Jane",
@@ -55,24 +57,7 @@ namespace AddressBook
                     phoneNumber: "987-654-3210",
                     email: "jane.smith@example.com"
                 );
-
-                if (addressBook.AddContact(newContact1))
-                {
-                    Console.WriteLine("Contact added successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Contact already exists. Duplicate entry not allowed.");
-                }
-
-                if (addressBook.AddContact(newContact2))
-                {
-                    Console.WriteLine("Contact added successfully.");
-                }
-                else
-                {
-                    Console.WriteLine("Contact already exists. Duplicate entry not allowed.");
-                }
+                addressBook!.AddContact(newContact2);
             }
             else
             {
@@ -81,6 +66,18 @@ namespace AddressBook
 
             // Displaying all contacts in the address book
             DisplayAddressBook(addressBook);
+
+            // Search contacts by city
+            Console.Write("\nEnter a city to search for contacts: ");
+            string searchCity = Console.ReadLine();
+            List<Contact> citySearchResults = addressBookSystem.SearchContactsByCity(searchCity);
+            DisplaySearchResults(citySearchResults);
+
+            // Search contacts by state
+            Console.Write("\nEnter a state to search for contacts: ");
+            string searchState = Console.ReadLine();
+            List<Contact> stateSearchResults = addressBookSystem.SearchContactsByState(searchState);
+            DisplaySearchResults(stateSearchResults);
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
@@ -104,6 +101,29 @@ namespace AddressBook
                 Console.WriteLine($"Phone: {contact.PhoneNumber}");
                 Console.WriteLine($"Email: {contact.Email}");
                 Console.WriteLine();
+            }
+        }
+
+        static void DisplaySearchResults(List<Contact> searchResults)
+        {
+            if (searchResults.Count > 0)
+            {
+                Console.WriteLine("\nSearch Results:");
+                foreach (Contact contact in searchResults)
+                {
+                    Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                    Console.WriteLine($"Address: {contact.Address}");
+                    Console.WriteLine($"City: {contact.City}");
+                    Console.WriteLine($"State: {contact.State}");
+                    Console.WriteLine($"Zip Code: {contact.ZipCode}");
+                    Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                    Console.WriteLine($"Email: {contact.Email}");
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.WriteLine("No matching contacts found.");
             }
         }
     }

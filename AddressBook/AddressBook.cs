@@ -49,5 +49,14 @@ namespace AddressBook
                 Console.WriteLine("Contact not found.");
             }
         }
+        public List<Contact> SearchByCity(string city)
+        {
+            return contacts.FindAll(c => c.City == city);
+        }
+
+        public List<Contact> SearchByState(string state)
+        {
+            return contacts.FindAll(c => c.State == state);
+        }
     }
 }
