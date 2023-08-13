@@ -18,8 +18,14 @@ namespace AddressBook
             StatePersonDictionary = new Dictionary<string, List<Contact>>();
         }
 
-        public void AddContact(Contact contact)
+        public bool AddContact(Contact contact)
         {
+            if (contacts.Contains(contact))
+            {
+                Console.WriteLine("Duplicate entry: Contact already exists.");
+                return false;
+            }
+
             contacts.Add(contact);
 
             if (!CityPersonDictionary.ContainsKey(contact.City))
@@ -33,6 +39,8 @@ namespace AddressBook
                 StatePersonDictionary[contact.State] = new List<Contact>();
             }
             StatePersonDictionary[contact.State].Add(contact);
+
+            return true;
         }
 
         public List<Contact> GetContacts()
@@ -61,20 +69,22 @@ namespace AddressBook
 
         public List<Contact> SearchByCity(string city)
         {
-            if (CityPersonDictionary.ContainsKey(city))
-            {
-                return CityPersonDictionary[city];
-            }
-            return new List<Contact>();
+            return CityPersonDictionary.TryGetValue(city, out List<Contact> contacts) ? contacts : new List<Contact>();
         }
 
         public List<Contact> SearchByState(string state)
         {
-            if (StatePersonDictionary.ContainsKey(state))
-            {
-                return StatePersonDictionary[state];
-            }
-            return new List<Contact>();
+            return StatePersonDictionary.TryGetValue(state, out List<Contact> contacts) ? contacts : new List<Contact>();
+        }
+
+        public int GetContactsCountByCity(string city)
+        {
+            return CityPersonDictionary.TryGetValue(city, out List<Contact> contacts) ? contacts.Count : 0;
+        }
+
+        public int GetContactsCountByState(string state)
+        {
+            return StatePersonDictionary.TryGetValue(state, out List<Contact> contacts) ? contacts.Count : 0;
         }
     }
 }

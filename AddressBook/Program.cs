@@ -66,28 +66,64 @@ namespace AddressBook
             // Displaying all contacts in the address book
             DisplayAddressBook(addressBook);
 
-            // Search and view contacts by city or state
+            // Search and display contacts by City or State
             Console.WriteLine("\nSearch Contacts by City: ");
             string searchCity = Console.ReadLine();
-            var citySearchResults = addressBookSystem.SearchContactsByCity(searchCity);
-            DisplaySearchResults(citySearchResults);
+            List<Contact> citySearchResults = addressBookSystem.SearchContactsByCity(searchCity);
+            DisplaySearchResults(citySearchResults, searchCity);
 
             Console.WriteLine("\nSearch Contacts by State: ");
             string searchState = Console.ReadLine();
-            var stateSearchResults = addressBookSystem.SearchContactsByState(searchState);
-            DisplaySearchResults(stateSearchResults);
+            List<Contact> stateSearchResults = addressBookSystem.SearchContactsByState(searchState);
+            DisplaySearchResults(stateSearchResults, searchState);
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
 
         static void DisplayAddressBook(AddressBook? addressBook)
         {
-            // Displaying existing address book entries as before
+            if (addressBook == null)
+            {
+                Console.WriteLine("Address Book not found.");
+                return;
+            }
+
+            Console.WriteLine($"\nAddress Book '{addressBook.Name}' Entries:");
+            foreach (Contact contact in addressBook.GetContacts())
+            {
+                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                Console.WriteLine($"Address: {contact.Address}");
+                Console.WriteLine($"City: {contact.City}");
+                Console.WriteLine($"State: {contact.State}");
+                Console.WriteLine($"Zip Code: {contact.ZipCode}");
+                Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                Console.WriteLine($"Email: {contact.Email}");
+                Console.WriteLine();
+            }
         }
 
-        static void DisplaySearchResults(List<Contact> searchResults)
+        static void DisplaySearchResults(List<Contact> searchResults, string searchLocation)
         {
-            // Displaying search results as before
+            if (searchResults.Count > 0)
+            {
+                Console.WriteLine($"\nSearch Results in {searchLocation}:");
+                foreach (Contact contact in searchResults)
+                {
+                    Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                    Console.WriteLine($"Address: {contact.Address}");
+                    Console.WriteLine($"City: {contact.City}");
+                    Console.WriteLine($"State: {contact.State}");
+                    Console.WriteLine($"Zip Code: {contact.ZipCode}");
+                    Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                    Console.WriteLine($"Email: {contact.Email}");
+                    Console.WriteLine();
+                }
+                Console.WriteLine($"Total contacts in {searchLocation}: {searchResults.Count}");
+            }
+            else
+            {
+                Console.WriteLine($"No matching contacts found in {searchLocation}.");
+            }
         }
     }
 }
