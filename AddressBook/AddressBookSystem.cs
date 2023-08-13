@@ -1,5 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using CsvHelper;
+using CsvHelper.Configuration;
+using System.Linq;
 
 namespace AddressBook
 {
@@ -33,12 +37,44 @@ namespace AddressBook
 
         public AddressBook GetAddressBook(string name)
         {
-            return addressBooks[name];
+            if (addressBooks.TryGetValue(name, out AddressBook addressBook))
+            {
+                return addressBook;
+            }
+            return null;
         }
 
-        public List<string> GetAddressBookNames()
+        public List<AddressBook> GetAddressBooks()
         {
-            return new List<string>(addressBooks.Keys);
+            return addressBooks.Values.ToList();
+        }
+
+        public void SaveToCsv(string filePath)
+        {
+            using (var writer = new StreamWriter(filePath))
+            using (var csv = new CsvWriter(writer, new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)))
+            {
+                var allContacts = addressBooks.Values.SelectMany(ab => ab.GetContacts());
+                csv.WriteRecords(allContacts);
+            }
+        }
+
+        public void LoadFromCsv(string filePath)
+        {
+            using (var reader = new StreamReader(filePath))
+            using (var csv = new CsvReader(reader, new CsvConfiguration(System.Globalization.CultureInfo.InvariantCulture)))
+            {
+                var contacts = csv.GetRecords<Contact>().ToList();
+                addressBooks.Clear();
+                foreach (var contact in contacts)
+                {
+                    if (!addressBooks.ContainsKey(contact.AddressBookName))
+                    {
+                        addressBooks.Add(contact.AddressBookName, new AddressBook(contact.AddressBookName));
+                    }
+                    addressBooks[contact.AddressBookName].AddContact(contact);
+                }
+            }
         }
     }
 }

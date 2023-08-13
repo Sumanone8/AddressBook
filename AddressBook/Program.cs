@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace AddressBook
 {
@@ -12,7 +13,7 @@ namespace AddressBook
 
             // Add a new Address Book using Console input
             Console.Write("Enter the name of the new Address Book: ");
-            string newAddressBookName = Console.ReadLine();
+            string newAddressBookName = Console.ReadLine()!;
 
             if (!string.IsNullOrEmpty(newAddressBookName))
             {
@@ -30,14 +31,34 @@ namespace AddressBook
                 Console.WriteLine("Invalid Address Book name. Please provide a non-empty name.");
             }
 
-            AddressBook? addressBook = addressBookSystem.GetAddressBook(newAddressBookName);
-
+            // Creating contacts and adding them to the Address Book
+            AddressBook addressBook = addressBookSystem.GetAddressBook(newAddressBookName);
             if (addressBook != null)
             {
-                Contact newContact1 = new Contact("John", "Doe", "123 Main St", "Cityville", "Stateville", "12345", "123-456-7890", "john.doe@example.com");
+                Contact newContact1 = new Contact(
+                    firstName: "John",
+                    lastName: "Doe",
+                    address: "123 Main St",
+                    city: "Cityville",
+                    state: "Stateville",
+                    zipCode: "12345",
+                    phoneNumber: "123-456-7890",
+                    email: "john.doe@example.com",
+                    addressBookName: newAddressBookName
+                );
                 addressBook.AddContact(newContact1);
 
-                Contact newContact2 = new Contact("Jane", "Smith", "456 Elm St", "Townville", "Stateville", "67890", "987-654-3210", "jane.smith@example.com");
+                Contact newContact2 = new Contact(
+                    firstName: "Jane",
+                    lastName: "Smith",
+                    address: "456 Elm St",
+                    city: "Townville",
+                    state: "Stateville",
+                    zipCode: "67890",
+                    phoneNumber: "987-654-3210",
+                    email: "jane.smith@example.com",
+                    addressBookName: newAddressBookName
+                );
                 addressBook.AddContact(newContact2);
             }
             else
@@ -48,19 +69,30 @@ namespace AddressBook
             // Displaying all contacts in the address book
             DisplayAddressBook(addressBook);
 
-            // Saving address book to a file
-            string filePath = "addressbook.txt";
-            addressBook.SaveToFile(filePath);
-            Console.WriteLine("Address Book saved to file.");
+            // Save address book to CSV
+            addressBookSystem.SaveToCsv("addressbook.csv");
 
-            // Loading address book from a file
-            addressBook.LoadFromFile(filePath);
-            Console.WriteLine("Address Book loaded from file.");
+            // Load address book from CSV
+            addressBookSystem.LoadFromCsv("addressbook.csv");
+
+            // Get all address books
+            var allAddressBooks = addressBookSystem.GetAddressBooks();
+            Console.WriteLine("\nAll Address Books:");
+            foreach (var ab in allAddressBooks)
+            {
+                Console.WriteLine($"Address Book: {ab.Name}");
+                Console.WriteLine("Contacts:");
+                foreach (var contact in ab.GetContacts())
+                {
+                    Console.WriteLine(contact);
+                    Console.WriteLine();
+                }
+            }
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
 
-        static void DisplayAddressBook(AddressBook? addressBook)
+        static void DisplayAddressBook(AddressBook addressBook)
         {
             if (addressBook == null)
             {
@@ -71,7 +103,7 @@ namespace AddressBook
             Console.WriteLine($"\nAddress Book '{addressBook.Name}' Entries:");
             foreach (Contact contact in addressBook.GetContacts())
             {
-                Console.WriteLine(contact.ToString());
+                Console.WriteLine(contact);
                 Console.WriteLine();
             }
         }
