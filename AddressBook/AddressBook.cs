@@ -7,23 +7,32 @@ namespace AddressBook
     {
         public string Name { get; private set; }
         private List<Contact> contacts;
+        public Dictionary<string, List<Contact>> CityPersonDictionary { get; private set; }
+        public Dictionary<string, List<Contact>> StatePersonDictionary { get; private set; }
 
         public AddressBook(string name)
         {
             Name = name;
             contacts = new List<Contact>();
+            CityPersonDictionary = new Dictionary<string, List<Contact>>();
+            StatePersonDictionary = new Dictionary<string, List<Contact>>();
         }
 
-        public bool AddContact(Contact contact)
+        public void AddContact(Contact contact)
         {
-            if (contacts.Contains(contact))
-            {
-                Console.WriteLine("Duplicate entry: Contact already exists.");
-                return false;
-            }
-
             contacts.Add(contact);
-            return true;
+
+            if (!CityPersonDictionary.ContainsKey(contact.City))
+            {
+                CityPersonDictionary[contact.City] = new List<Contact>();
+            }
+            CityPersonDictionary[contact.City].Add(contact);
+
+            if (!StatePersonDictionary.ContainsKey(contact.State))
+            {
+                StatePersonDictionary[contact.State] = new List<Contact>();
+            }
+            StatePersonDictionary[contact.State].Add(contact);
         }
 
         public List<Contact> GetContacts()
@@ -49,14 +58,23 @@ namespace AddressBook
                 Console.WriteLine("Contact not found.");
             }
         }
+
         public List<Contact> SearchByCity(string city)
         {
-            return contacts.FindAll(c => c.City == city);
+            if (CityPersonDictionary.ContainsKey(city))
+            {
+                return CityPersonDictionary[city];
+            }
+            return new List<Contact>();
         }
 
         public List<Contact> SearchByState(string state)
         {
-            return contacts.FindAll(c => c.State == state);
+            if (StatePersonDictionary.ContainsKey(state))
+            {
+                return StatePersonDictionary[state];
+            }
+            return new List<Contact>();
         }
     }
 }

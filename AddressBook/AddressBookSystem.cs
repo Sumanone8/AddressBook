@@ -25,29 +25,6 @@ namespace AddressBook
                 Console.WriteLine($"An Address Book with the name '{name}' already exists.");
             }
         }
-        public List<Contact> SearchContactsByCity(string city)
-        {
-            List<Contact> searchResults = new List<Contact>();
-
-            foreach (AddressBook addressBook in addressBooks.Values)
-            {
-                searchResults.AddRange(addressBook.SearchByCity(city));
-            }
-
-            return searchResults;
-        }
-
-        public List<Contact> SearchContactsByState(string state)
-        {
-            List<Contact> searchResults = new List<Contact>();
-
-            foreach (AddressBook addressBook in addressBooks.Values)
-            {
-                searchResults.AddRange(addressBook.SearchByState(state));
-            }
-
-            return searchResults;
-        }
 
         public bool AddressBookExists(string name)
         {
@@ -62,6 +39,32 @@ namespace AddressBook
         public List<string> GetAddressBookNames()
         {
             return new List<string>(addressBooks.Keys);
+        }
+
+        public List<Contact> SearchContactsByCity(string city)
+        {
+            List<Contact> searchResults = new List<Contact>();
+
+            foreach (AddressBook addressBook in addressBooks.Values)
+            {
+                List<Contact> cityContacts = addressBook.GetContactsByCity(city);
+                searchResults.AddRange(cityContacts);
+            }
+
+            return searchResults;
+        }
+
+        public List<Contact> SearchContactsByState(string state)
+        {
+            List<Contact> searchResults = new List<Contact>();
+
+            foreach (AddressBook addressBook in addressBooks.Values)
+            {
+                List<Contact> stateContacts = addressBook.GetContactsByState(state);
+                searchResults.AddRange(stateContacts);
+            }
+
+            return searchResults;
         }
     }
 }
