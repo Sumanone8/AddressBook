@@ -24,5 +24,20 @@ namespace AddressBook
             PhoneNumber = phoneNumber;
             Email = email;
         }
+        public override bool Equals(object obj)
+        {
+            if (obj == null || GetType() != obj.GetType())
+            {
+                return false;
+            }
+
+            Contact other = (Contact)obj;
+            return FirstName == other.FirstName && LastName == other.LastName;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(FirstName, LastName);
+        }
     }
 }

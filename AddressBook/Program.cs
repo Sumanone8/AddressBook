@@ -44,7 +44,6 @@ namespace AddressBook
                     phoneNumber: "123-456-7890",
                     email: "john.doe@example.com"
                 );
-                addressBook!.AddContact(newContact1);
 
                 Contact newContact2 = new Contact(
                     firstName: "Jane",
@@ -56,7 +55,24 @@ namespace AddressBook
                     phoneNumber: "987-654-3210",
                     email: "jane.smith@example.com"
                 );
-                addressBook!.AddContact(newContact2);
+
+                if (addressBook.AddContact(newContact1))
+                {
+                    Console.WriteLine("Contact added successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Contact already exists. Duplicate entry not allowed.");
+                }
+
+                if (addressBook.AddContact(newContact2))
+                {
+                    Console.WriteLine("Contact added successfully.");
+                }
+                else
+                {
+                    Console.WriteLine("Contact already exists. Duplicate entry not allowed.");
+                }
             }
             else
             {
