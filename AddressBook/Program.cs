@@ -44,7 +44,7 @@ namespace AddressBook
                     phoneNumber: "123-456-7890",
                     email: "john.doe@example.com"
                 );
-                addressBook!.AddContact(newContact1);
+                addressBook.AddContact(newContact1);
 
                 Contact newContact2 = new Contact(
                     firstName: "Jane",
@@ -56,7 +56,7 @@ namespace AddressBook
                     phoneNumber: "987-654-3210",
                     email: "jane.smith@example.com"
                 );
-                addressBook!.AddContact(newContact2);
+                addressBook.AddContact(newContact2);
             }
             else
             {
@@ -66,21 +66,18 @@ namespace AddressBook
             // Displaying all contacts in the address book
             DisplayAddressBook(addressBook);
 
-            // Sorting and displaying the address book by name
-            Console.WriteLine("\nSorting Address Book by Name:");
-            addressBook!.SortContactsByName();
-            DisplayAddressBook(addressBook);
+            // Sorting and displaying contacts by City, State, and Zip
+            if (addressBook != null)
+            {
+                addressBook.SortContactsByCity();
+                DisplaySortedAddressBook(addressBook, "City");
 
-            // Search for contacts by city and state
-            Console.WriteLine("\nSearch Contacts by City: ");
-            string searchCity = Console.ReadLine();
-            var citySearchResults = addressBookSystem.SearchContactsByCity(searchCity);
-            DisplayViewResults(citySearchResults, searchCity);
+                addressBook.SortContactsByState();
+                DisplaySortedAddressBook(addressBook, "State");
 
-            Console.WriteLine("\nSearch Contacts by State: ");
-            string searchState = Console.ReadLine();
-            var stateSearchResults = addressBookSystem.SearchContactsByState(searchState);
-            DisplayViewResults(stateSearchResults, searchState);
+                addressBook.SortContactsByZip();
+                DisplaySortedAddressBook(addressBook, "Zip");
+            }
 
             Console.WriteLine("Thank you for using the Address Book program!");
         }
@@ -96,27 +93,38 @@ namespace AddressBook
             Console.WriteLine($"\nAddress Book '{addressBook.Name}' Entries:");
             foreach (Contact contact in addressBook.GetContacts())
             {
-                Console.WriteLine(contact.ToString());
+                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                Console.WriteLine($"Address: {contact.Address}");
+                Console.WriteLine($"City: {contact.City}");
+                Console.WriteLine($"State: {contact.State}");
+                Console.WriteLine($"Zip Code: {contact.ZipCode}");
+                Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                Console.WriteLine($"Email: {contact.Email}");
                 Console.WriteLine();
             }
         }
 
-        static void DisplayViewResults(System.Collections.Generic.List<Contact> viewResults, string searchKey)
+        static void DisplaySortedAddressBook(AddressBook? addressBook, string sortBy)
         {
-            if (viewResults.Count > 0)
+            if (addressBook == null)
             {
-                Console.WriteLine($"\nView Results for {searchKey}:");
-                foreach (Contact contact in viewResults)
-                {
-                    Console.WriteLine(contact.ToString());
-                    Console.WriteLine();
-                }
-                Console.WriteLine($"Total contacts in {searchKey}: {viewResults.Count}");
+                Console.WriteLine("Address Book not found.");
+                return;
             }
-            else
+
+            Console.WriteLine($"\nSorting Address Book by {sortBy}:");
+            foreach (Contact contact in addressBook.GetContacts())
             {
-                Console.WriteLine("No matching contacts found.");
+                Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
+                Console.WriteLine($"Address: {contact.Address}");
+                Console.WriteLine($"City: {contact.City}");
+                Console.WriteLine($"State: {contact.State}");
+                Console.WriteLine($"Zip Code: {contact.ZipCode}");
+                Console.WriteLine($"Phone: {contact.PhoneNumber}");
+                Console.WriteLine($"Email: {contact.Email}");
+                Console.WriteLine();
             }
         }
     }
 }
+
